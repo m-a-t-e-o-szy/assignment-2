@@ -2,30 +2,85 @@ import sys
 import math
 
 def load_data(filepath:str, column:int)->tuple[list, int]:
-    # TODO - Complete the function so it loads the data from the file into a list
-    # The function returns a tuple that contains the list of values and the total number 
-    # of values in the column
-    pass
+    numbers = []
+    count = 0
+    line_number = 0
+
+    with open(filepath, "r") as infile:
+        for line in infile:
+            line_number += 1
+            values = line.rstrip("\r\n").split("\t")
+
+            try:
+                if column < 0:
+                    raise IndexError
+                value = values[column]
+            except IndexError:
+                print(f"Exiting: Invalid column {column} in line {line_number} in file: {filepath}")
+                sys.exit()
+
+            count += 1
+
+            try:
+                number = float(value)
+                if not math.isnan(number):
+                    numbers.append(number)
+            except ValueError:
+                pass
+
+    if len(numbers) == 0:
+        print(f"Error: There were no valid numbers in column {column} in file: {filepath}")
+        sys.exit()
+
+    return numbers, count
 
 def calculate_average(numbers:list)->float:
-    # TODO - Complete the function to return the average of the list of numbers
-    pass
+    total = 0
+
+    for number in numbers:
+        total += number
+
+    return total / len(numbers)
 
 def get_max_and_min(numbers:list)->tuple[float, float]:
-    # TODO - Complete the function to return a tuple with the maximum and minimum
-    # values in the list, in that order
-    pass
+    maximum = max(numbers)
+    minimum = min(numbers)
+
+    return maximum, minimum
+ 
 
 def calculate_variance(numbers:list)->float:
-    # TODO - Complete the function to return the variance of the numbers in the list
-    pass
+    if len(numbers) < 2:
+        return 0.0
+
+    average = calculate_average(numbers)
+    total = 0
+
+    for number in numbers:
+        total += (number - average) ** 2
+
+    variance = total / (len(numbers) - 1)
+
+    return variance
 
 def calculate_std_dev(numbers:list)->float:
-    # TODO - Complete the function to return the standard deviation of the numbers in the list
-    pass
+    variance = calculate_variance(numbers)
+    std_dev = math.sqrt(variance)
 
-def calculate_median(number:list)->float:
-    # TODO - Complete the function to return the median of the numbers in the list
-    pass
+    return std_dev
+
+def calculate_median(numbers:list)->float:
+    sort_num = sorted(numbers)
+    n = len(sort_num)
+    mid = n//2
+
+    if n % 2 == 0:
+        median = (sort_num[mid-1]+sort_num[mid])/2
+    else:
+        median = sort_num[mid]
+
+    return float(median)
+
+
 
 
